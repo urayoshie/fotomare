@@ -11,25 +11,37 @@ $(function () {
 
 // 固定リンク_フッター手前でストップ
 function PageTopAnime() {
+  var scroll = $(window).scrollTop(); // スクロール値を取得
+  var wH = window.innerHeight; // 画面の高さを取得
+  var footerPos = $('#footer').offset().top; // footerの位置を取得
+  var docHeight = $(document).height(); // ドキュメント全体の高さを取得
 
-  var scroll = $(window).scrollTop(); //スクロール値を取得
-  if (scroll >= 0) { //スクロールしたら
-    $('#fixed-link').removeClass('DownMove'); // DownMoveというクラス名を除去して
-    $('#fixed-link').addClass('UpMove'); // UpMoveというクラス名を追加して出現
-  } else { //それ以外は
-    if ($('#fixed-link').hasClass('UpMove')) { //UpMoveというクラス名が既に付与されていたら
-      $('#fixed-link').removeClass('UpMove'); //  UpMoveというクラス名を除去し
-      $('#fixed-link').addClass('DownMove'); // DownMoveというクラス名を追加して非表示
+  // スクロールが画面の一番下に到達した場合
+  if (scroll + wH >= docHeight) {
+    $('#fixed-link').fadeOut(); // 非表示にする
+  } else {
+    $('#fixed-link').fadeIn(); // 再表示する
+    if (scroll >= 0) {
+      // スクロールしたら
+      $('#fixed-link').removeClass('DownMove'); // DownMoveというクラス名を除去して
+      $('#fixed-link').addClass('UpMove'); // UpMoveというクラス名を追加して出現
+    } else {
+      // それ以外は
+      if ($('#fixed-link').hasClass('UpMove')) {
+        // UpMoveというクラス名が既に付与されていたら
+        $('#fixed-link').removeClass('UpMove'); // UpMoveというクラス名を除去し
+        $('#fixed-link').addClass('DownMove'); // DownMoveというクラス名を追加して非表示
+      }
     }
   }
 
-  var wH = window.innerHeight; //画面の高さを取得
-  var footerPos = $('#footer').offset().top; //footerの位置を取得
-  if (scroll + wH >= (footerPos)) {
+  if (scroll + wH >= footerPos) {
     // var pos = (scroll+wH) - footerPos //スクロールの値＋画面の高さからfooterの位置を取得し
     $('#fixed-link').css('bottom', footerPos); //#page-topに上記の値をCSSのbottomに直接指定してフッター手前で止まるようにする
-  } else { //それ以外は
-    if ($('#fixed-link').hasClass('UpMove')) { //UpMoveというクラス名がついていたら
+  } else {
+    //それ以外は
+    if ($('#fixed-link').hasClass('UpMove')) {
+      //UpMoveというクラス名がついていたら
       $('#fixed-link').css('bottom', '0');
     }
   }
@@ -40,6 +52,10 @@ $(window).on('load', function () {
   PageTopAnime(); /* スクロールした際の動きの関数を呼ぶ*/
 });
 
+// スクロール時に動作するように設定
+$(window).on('scroll', function () {
+  PageTopAnime();
+});
 
 //プライバシーバリデーション位置
 $(function () {
